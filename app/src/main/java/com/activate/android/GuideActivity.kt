@@ -62,7 +62,7 @@ class GuideActivity : AppCompatActivity() {
         Step(
             7, 9,
             "7. Enable the Permission",
-            "Return to 'Display over other apps'—the switch is now unlocked! Turn it ON.",
+            "Return to 'Display over other apps'. The switch is now unlocked! Turn it ON.",
             R.drawable.guide_step_7
         ),
         Step(

@@ -1,55 +1,85 @@
+<div align="center">
+
 # Activate Android
 
-An Android port of the famous [activate-linux](https://github.com/MrGlockenspiel/activate-linux) / "Activate Windows" desktop watermark prank.
+### *sub-title text*
 
-Displays an un-clickable, transparent watermark in the lower-right corner across your entire Android OS:
+[![Android](https://img.shields.io/badge/Android-8.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white)](#)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](#)
+[![Genuine](https://img.shields.io/badge/Genuine%20OS-False-critical?style=for-the-badge)](#)
 
-```text
-Activate Android
-Go to Settings to activate Android.
+<br/>
+
+**The nostalgic feeling of being a Windows pirate, now on Android!** <br/>
+This project was inspired by [activate-linux](https://github.com/MrGlockenspiel/activate-linux)
+
+[Features](#features) | [Installation](#installation) | [FAQ](#frequently-asked-questions-) | [Disclaimer](#disclaimer)
+
+</div>
+
+---
+
+## Features
+
+- **Full Click-Through:** Touches, taps, swipes and keyboard gestures pass completely through the watermark
+
+- **Customisations**:
+  - **Custom Text**
+  - **Live Preview**
+  - **Opacity Slider**
+  - **Position Fine-Tuning**
+- **Setup Guide** _inside_
+
+---
+
+## Installation
+
+### Grab the Pre-built APK
+Download the latest `app-release.apk` from the [Releases](../../releases) tab (or from the project build folder):
+- `app/build/outputs/apk/release/app-release.apk`
+
+### Or Build From Source
+(Needs Android SDK and Java 17+)
+
+```bash
+git clone https://github.com/anantxgarg/activate-android.git
+cd activate-android
+./gradlew assembleRelease
 ```
+The APK will be at `app/build/outputs/apk/release/app-release.apk`.
 
 ---
 
-## 🚀 Key Features
+## Frequently Asked Questions ❓
 
-* **True System-Wide Passthrough Overlay**:
-  * Built using Android's `WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE` and `FLAG_NOT_FOCUSABLE`.
-  * Touches, gestures, keyboards, and notifications pass through without any interference.
-* **Modern Foreground Service (Android 8 to 14/15+)**:
-  * Compliant with Android 14+ `FOREGROUND_SERVICE_SPECIAL_USE` requirements.
-  * Low-priority, silent notification to keep the overlay active without battery drains.
-* **Customization**:
-  * Live edit title and subtitle (Presets included: *Activate Android*, *Activate Pixel*, *Activate One UI*, *Activate LineageOS*, *Activate Windows*).
-  * Opacity slider (10% to 100%).
-  * Screen offsets (Bottom margin & Right margin in dp).
-  * Start on Boot (`BOOT_COMPLETED`).
-* **Quick Settings Tile**:
-  * Toggle the watermark ON/OFF directly from the Quick Settings notification shade pull-down.
+<details>
+<summary><b>Can I still tap buttons behind the watermark?</b></summary>
+F*ck around and find out I guess. (yes you can)
+</details>
 
----
+<details>
+<summary><b>Does it drain battery?</b></summary>
+Nope! But replying to this made up FAQ sure did drain mine :)
+</details>
 
-## 🛠️ How It Works (Technical Architecture)
+<details>
+<summary><b>Does it steal my data?</b></summary>
+That is a feature planned for v2.0
+</details>
 
-In Linux, `activate-linux` uses X11 overlay windows or Wayland's `wlr-layer-shell`. On Android, the architecture translates to:
-
-| Component | Linux (`activate-linux`) | Android (`activate-android`) |
-| :--- | :--- | :--- |
-| **Window Type** | X11 Override-Redirect / Wayland Layer | `WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY` |
-| **Touch Passthrough**| XShape / input transparent region | `FLAG_NOT_TOUCHABLE \| FLAG_NOT_FOCUSABLE` |
-| **Screen Coverage** | Full screen overlay | `FLAG_LAYOUT_IN_SCREEN \| FLAG_LAYOUT_NO_LIMITS` |
-| **Permission Gate** | Root / Display server access | `android.permission.SYSTEM_ALERT_WINDOW` |
-| **Persistence** | Systemd service / daemon | Foreground `Service` with `START_STICKY` |
+<details>
+<summary><b>Is this genuine Windows?</b></summary>
+...why are you still opening these faqs
+</details>
 
 ---
 
-## 📱 How to Open & Build
+## Disclaimer
 
-1. Open **Android Studio** (`/opt/android-studio/bin/studio.sh`).
-2. Select **Open** and choose the `activate-android` folder:
-   `/home/knomp/Desktop/Projects/activate-android`
-3. Connect an Android phone or emulator with USB debugging enabled.
-4. Click **Run (`Shift + F10`)**.
-5. In the app:
-   - Tap **Grant Permission** to allow "Display over other apps".
-   - Turn on the **Enable Watermark** switch.
+Disclaimer? I barely know 'er.
+
+---
+
+<div align="center">
+Made with lots of free time and definitely no crypto miners.
+</div>
