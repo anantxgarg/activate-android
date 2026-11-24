@@ -2,6 +2,8 @@ package com.activate.android
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +31,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Show guide on first launch
+        val prefs = getSharedPreferences(OverlayService.PREFS_NAME, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("has_seen_guide", false)) {
+            prefs.edit().putBoolean("has_seen_guide", true).apply()
+            startActivity(Intent(this, GuideActivity::class.java))
+        }
+
         setupUI()
         loadPreferences()
     }
@@ -40,14 +49,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        // Guide Button
+        binding.btnOpenGuide.setOnClickListener {
+            startActivity(Intent(this, GuideActivity::class.java))
+        }
+
         // Permission Button
         binding.btnGrantPermission.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName")
-                )
-                overlayPermissionLauncher.launch(intent)
+                if (hasOverlayPermission()) {
+                    Toast.makeText(this, "Permission is already granted!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName")
+                    )
+                    overlayPermissionLauncher.launch(intent)
+                }
             }
         }
 
@@ -199,14 +217,17 @@ class MainActivity : AppCompatActivity() {
         if (granted) {
             binding.tvPermissionStatus.text = getString(R.string.permission_granted)
             binding.tvPermissionDesc.text = "All required permissions are enabled. You can now toggle the overlay."
-            binding.btnGrantPermission.isEnabled = false
-            binding.btnGrantPermission.text = "Granted"
+            binding.btnGrantPermission.text = "✓ Granted"
+            binding.btnGrantPermission.setTextColor(Color.WHITE)
+            binding.btnGrantPermission.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#2E7D32"))
             binding.cardPermission.strokeColor = ContextCompat.getColor(this, android.R.color.holo_green_dark)
         } else {
             binding.tvPermissionStatus.text = getString(R.string.permission_required_title)
             binding.tvPermissionDesc.text = getString(R.string.permission_required_desc)
-            binding.btnGrantPermission.isEnabled = true
             binding.btnGrantPermission.text = getString(R.string.grant_permission)
+            binding.btnGrantPermission.setTextColor(Color.WHITE)
+            binding.btnGrantPermission.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#6750A4"))
+            binding.cardPermission.strokeColor = ContextCompat.getColor(this, R.color.purple_40)
         }
     }
 
