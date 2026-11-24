@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Display the classic desktop watermark over your entire Android OS."
+            android:text="The nostalgia of being a Windows pirate, now on Android!!"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?android:attr/textColorSecondary" />
 
@@ -255,13 +255,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Show watermark on lock screen" />
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/cb_stealth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Stealth Mode (Hide from 'Active Apps' &amp; Notifications)" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cb_boot"

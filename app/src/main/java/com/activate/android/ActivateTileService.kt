@@ -42,15 +42,10 @@ class ActivateTileService : TileService() {
         val serviceIntent = Intent(this, OverlayService::class.java)
         if (OverlayService.isRunning) {
             serviceIntent.action = OverlayService.ACTION_STOP
-            startService(serviceIntent)
         } else {
             serviceIntent.action = OverlayService.ACTION_START
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(serviceIntent)
-            } else {
-                startService(serviceIntent)
-            }
         }
+        startService(serviceIntent)
 
         // Small delay to allow service to start/stop before updating tile
         qsTile?.let { tile ->

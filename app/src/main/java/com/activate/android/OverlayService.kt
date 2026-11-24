@@ -1,9 +1,5 @@
 package com.activate.android
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.core.app.NotificationCompat
 
 class OverlayService : Service() {
 
@@ -30,9 +25,6 @@ class OverlayService : Service() {
         const val ACTION_STOP = "com.activate.android.ACTION_STOP"
         const val ACTION_UPDATE = "com.activate.android.ACTION_UPDATE"
 
-        const val CHANNEL_ID = "activate_android_overlay_channel"
-        const val NOTIFICATION_ID = 1001
-
         const val PREFS_NAME = "activate_android_prefs"
         const val KEY_IS_ENABLED = "is_enabled"
         const val KEY_TITLE = "title"
@@ -41,7 +33,6 @@ class OverlayService : Service() {
         const val KEY_MARGIN_BOTTOM = "margin_bottom"
         const val KEY_MARGIN_END = "margin_end"
         const val KEY_SHOW_ON_LOCKSCREEN = "show_on_lockscreen"
-        const val KEY_STEALTH_MODE = "stealth_mode"
 
         var isRunning = false
             private set
@@ -73,7 +64,6 @@ class OverlayService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        createNotificationChannel()
 
         val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
         registerReceiver(screenReceiver, filter)
@@ -86,34 +76,14 @@ class OverlayService : Service() {
                 return START_NOT_STICKY
             }
             ACTION_UPDATE -> {
-                syncForegroundState()
                 updateOverlayFromPrefs()
             }
             else -> {
-                syncForegroundState()
                 isRunning = true
                 showOverlay()
             }
         }
         return START_STICKY
-    }
-
-    private fun syncForegroundState() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val isStealth = prefs.getBoolean(KEY_STEALTH_MODE, false)
-
-        if (isStealth) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-            } else {
-                @Suppress("DEPRECATION")
-                stopForeground(true)
-            }
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.cancel(NOTIFICATION_ID)
-        } else {
-            startForeground(NOTIFICATION_ID, buildNotification())
-        }
     }
 
     private fun showOverlay() {
@@ -218,53 +188,6 @@ class OverlayService : Service() {
                 e.printStackTrace()
             }
             overlayView = null
-        }
-    }
-
-    private fun buildNotification(): Notification {
-        val stopIntent = Intent(this, OverlayService::class.java).apply {
-            action = ACTION_STOP
-        }
-        val stopPendingIntent = PendingIntent.getService(
-            this,
-            1,
-            stopIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val openAppIntent = Intent(this, MainActivity::class.java)
-        val openAppPendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            openAppIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText("Watermark active. Tap to configure.")
-            .setSmallIcon(R.drawable.ic_watermark_tile)
-            .setOngoing(true)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setContentIntent(openAppPendingIntent)
-            .addAction(0, "Dismiss", stopPendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Activate Android Watermark",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Keeps the watermark overlay active in background"
-                enableLights(false)
-                enableVibration(false)
-            }
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
         }
     }
 }
