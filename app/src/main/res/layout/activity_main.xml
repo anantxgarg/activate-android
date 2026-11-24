@@ -257,6 +257,13 @@
             android:text="Show watermark on lock screen" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cb_stealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Stealth Mode (Hide from 'Active Apps' &amp; Notifications)" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cb_boot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

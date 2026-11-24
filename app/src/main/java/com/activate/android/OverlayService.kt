@@ -41,6 +41,7 @@ class OverlayService : Service() {
         const val KEY_MARGIN_BOTTOM = "margin_bottom"
         const val KEY_MARGIN_END = "margin_end"
         const val KEY_SHOW_ON_LOCKSCREEN = "show_on_lockscreen"
+        const val KEY_STEALTH_MODE = "stealth_mode"
 
         var isRunning = false
             private set
@@ -85,15 +86,34 @@ class OverlayService : Service() {
                 return START_NOT_STICKY
             }
             ACTION_UPDATE -> {
+                syncForegroundState()
                 updateOverlayFromPrefs()
             }
             else -> {
-                startForeground(NOTIFICATION_ID, buildNotification())
+                syncForegroundState()
                 isRunning = true
                 showOverlay()
             }
         }
         return START_STICKY
+    }
+
+    private fun syncForegroundState() {
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val isStealth = prefs.getBoolean(KEY_STEALTH_MODE, false)
+
+        if (isStealth) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(true)
+            }
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.cancel(NOTIFICATION_ID)
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification())
+        }
     }
 
     private fun showOverlay() {

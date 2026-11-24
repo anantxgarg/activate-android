@@ -125,6 +125,15 @@ class MainActivity : AppCompatActivity() {
             notifyServiceUpdate()
         }
 
+        // Stealth Mode Checkbox
+        binding.cbStealth.setOnCheckedChangeListener { _, isChecked ->
+            saveBoolean(OverlayService.KEY_STEALTH_MODE, isChecked)
+            if (isChecked) {
+                requestBatteryOptimizationExemption()
+            }
+            notifyServiceUpdate()
+        }
+
         // Start on Boot Checkbox
         binding.cbBoot.setOnCheckedChangeListener { _, isChecked ->
             saveBoolean("start_on_boot", isChecked)
@@ -160,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         binding.tvMarginEndLabel.text = "Right Offset: ${defaultMarginEnd}dp"
 
         binding.cbLockscreen.isChecked = defaultLockscreen
+        binding.cbStealth.isChecked = false
 
         getSharedPreferences(OverlayService.PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
@@ -169,6 +179,7 @@ class MainActivity : AppCompatActivity() {
             .putInt(OverlayService.KEY_MARGIN_BOTTOM, defaultMarginBottom)
             .putInt(OverlayService.KEY_MARGIN_END, defaultMarginEnd)
             .putBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, defaultLockscreen)
+            .putBoolean(OverlayService.KEY_STEALTH_MODE, false)
             .apply()
 
         notifyServiceUpdate()
@@ -184,6 +195,7 @@ class MainActivity : AppCompatActivity() {
         val marginBottom = prefs.getInt(OverlayService.KEY_MARGIN_BOTTOM, 48)
         val marginEnd = prefs.getInt(OverlayService.KEY_MARGIN_END, 24)
         val showOnLockscreen = prefs.getBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, true)
+        val stealthMode = prefs.getBoolean(OverlayService.KEY_STEALTH_MODE, false)
         val startOnBoot = prefs.getBoolean("start_on_boot", false)
 
         binding.etTitle.setText(title)
@@ -202,6 +214,7 @@ class MainActivity : AppCompatActivity() {
         binding.tvMarginEndLabel.text = "Right Offset: ${marginEnd}dp"
 
         binding.cbLockscreen.isChecked = showOnLockscreen
+        binding.cbStealth.isChecked = stealthMode
         binding.cbBoot.isChecked = startOnBoot
     }
 
@@ -234,13 +247,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startOverlayService() {
+        val prefs = getSharedPreferences(OverlayService.PREFS_NAME, Context.MODE_PRIVATE)
+        val isStealth = prefs.getBoolean(OverlayService.KEY_STEALTH_MODE, false)
+
         val intent = Intent(this, OverlayService::class.java).apply {
             action = OverlayService.ACTION_START
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (!isStealth && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {
             startService(intent)
+        }
+    }
+
+    private fun requestBatteryOptimizationExemption() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                try {
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                        data = Uri.parse("package:$packageName")
+                    }
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    try {
+                        val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                        startActivity(intent)
+                    } catch (e2: Exception) {
+                        e2.printStackTrace()
+                    }
+                }
+            }
         }
     }
 
