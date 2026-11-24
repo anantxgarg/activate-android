@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="The nostalgia of being a Windows pirate, now on Android!!"
+            android:text="The nostalgia of being a Windows pirate, now on Android :)"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?android:attr/textColorSecondary" />
 
@@ -250,17 +250,10 @@
 
         <!-- Options -->
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/cb_lockscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Show watermark on lock screen" />
-
-        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cb_boot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:text="@string/start_on_boot" />
 
         <!-- Reset Button -->

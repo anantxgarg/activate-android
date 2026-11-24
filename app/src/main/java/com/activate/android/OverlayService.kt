@@ -1,10 +1,8 @@
 package com.activate.android
 
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
@@ -32,31 +30,9 @@ class OverlayService : Service() {
         const val KEY_OPACITY = "opacity"
         const val KEY_MARGIN_BOTTOM = "margin_bottom"
         const val KEY_MARGIN_END = "margin_end"
-        const val KEY_SHOW_ON_LOCKSCREEN = "show_on_lockscreen"
 
         var isRunning = false
             private set
-    }
-
-    // Broadcast receiver to show watermark over lockscreen when screen turns off/on
-    private val screenReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val showOnLock = prefs.getBoolean(KEY_SHOW_ON_LOCKSCREEN, true)
-            if (!showOnLock || !isRunning) return
-
-            when (intent?.action) {
-                Intent.ACTION_SCREEN_OFF -> {
-                    // Pre-launch the lock screen watermark activity so it's ready when the screen turns on
-                    val lockIntent = Intent(this@OverlayService, LockscreenWatermarkActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                                Intent.FLAG_ACTIVITY_NO_ANIMATION or
-                                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                    }
-                    startActivity(lockIntent)
-                }
-            }
-        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -64,9 +40,6 @@ class OverlayService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-
-        val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
-        registerReceiver(screenReceiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -104,12 +77,10 @@ class OverlayService : Service() {
         }
 
         // FLAG_NOT_TOUCHABLE allows taps to pass completely through the watermark to apps underneath
-        @Suppress("DEPRECATION")
         val flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -176,11 +147,6 @@ class OverlayService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         isRunning = false
-        try {
-            unregisterReceiver(screenReceiver)
-        } catch (e: Exception) {
-            // ignore
-        }
         overlayView?.let { view ->
             try {
                 windowManager?.removeView(view)

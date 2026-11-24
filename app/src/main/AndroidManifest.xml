@@ -31,15 +31,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".LockscreenWatermarkActivity"
-            android:exported="false"
-            android:showWhenLocked="true"
-            android:turnScreenOn="false"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:theme="@style/Theme.TransparentLockscreen" />
-
         <service
             android:name=".OverlayService"
             android:enabled="true"

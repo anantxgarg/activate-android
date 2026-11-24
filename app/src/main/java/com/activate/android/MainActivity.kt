@@ -120,12 +120,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Lockscreen Watermark Checkbox
-        binding.cbLockscreen.setOnCheckedChangeListener { _, isChecked ->
-            saveBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, isChecked)
-            notifyServiceUpdate()
-        }
-
         // Start on Boot Checkbox
         binding.cbBoot.setOnCheckedChangeListener { _, isChecked ->
             saveBoolean("start_on_boot", isChecked)
@@ -143,7 +137,6 @@ class MainActivity : AppCompatActivity() {
         val defaultOpacity = 70
         val defaultMarginBottom = 48
         val defaultMarginEnd = 24
-        val defaultLockscreen = true
 
         binding.etTitle.setText(defaultTitle)
         binding.etSubtitle.setText(defaultSubtitle)
@@ -160,8 +153,6 @@ class MainActivity : AppCompatActivity() {
         binding.sliderMarginEnd.value = defaultMarginEnd.toFloat()
         binding.tvMarginEndLabel.text = "Right Offset: ${defaultMarginEnd}dp"
 
-        binding.cbLockscreen.isChecked = defaultLockscreen
-
         getSharedPreferences(OverlayService.PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(OverlayService.KEY_TITLE, defaultTitle)
@@ -169,7 +160,6 @@ class MainActivity : AppCompatActivity() {
             .putInt(OverlayService.KEY_OPACITY, defaultOpacity)
             .putInt(OverlayService.KEY_MARGIN_BOTTOM, defaultMarginBottom)
             .putInt(OverlayService.KEY_MARGIN_END, defaultMarginEnd)
-            .putBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, defaultLockscreen)
             .apply()
 
         notifyServiceUpdate()
@@ -184,7 +174,6 @@ class MainActivity : AppCompatActivity() {
         val opacity = prefs.getInt(OverlayService.KEY_OPACITY, 70)
         val marginBottom = prefs.getInt(OverlayService.KEY_MARGIN_BOTTOM, 48)
         val marginEnd = prefs.getInt(OverlayService.KEY_MARGIN_END, 24)
-        val showOnLockscreen = prefs.getBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, true)
         val startOnBoot = prefs.getBoolean("start_on_boot", false)
 
         binding.etTitle.setText(title)
@@ -202,7 +191,6 @@ class MainActivity : AppCompatActivity() {
         binding.sliderMarginEnd.value = marginEnd.toFloat()
         binding.tvMarginEndLabel.text = "Right Offset: ${marginEnd}dp"
 
-        binding.cbLockscreen.isChecked = showOnLockscreen
         binding.cbBoot.isChecked = startOnBoot
     }
 
