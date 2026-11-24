@@ -184,51 +184,6 @@
                 android:text="@string/default_title" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Preset Chips -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_presets"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleLine="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activate Android" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_pixel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activate Pixel" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_samsung"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activate One UI" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_lineage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activate LineageOS" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_windows"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activate Windows" />
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_subtitle"
             android:layout_width="match_parent"
@@ -293,13 +248,29 @@
             android:value="24"
             android:stepSize="4" />
 
-        <!-- Start on boot checkbox -->
+        <!-- Options -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cb_lockscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Show watermark on lock screen" />
+
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cb_boot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             android:text="@string/start_on_boot" />
+
+        <!-- Reset Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_reset_defaults"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/reset_defaults" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -89,13 +89,6 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // Preset Chips
-        binding.chipAndroid.setOnClickListener { setPreset("Activate Android", "Go to Settings to activate Android.") }
-        binding.chipPixel.setOnClickListener { setPreset("Activate Pixel", "Go to System to activate your Pixel.") }
-        binding.chipSamsung.setOnClickListener { setPreset("Activate One UI", "Go to Settings to activate One UI.") }
-        binding.chipLineage.setOnClickListener { setPreset("Activate LineageOS", "Go to Settings to activate LineageOS.") }
-        binding.chipWindows.setOnClickListener { setPreset("Activate Windows", "Go to Settings to activate Windows.") }
-
         // Opacity Slider
         binding.sliderOpacity.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
@@ -126,15 +119,60 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Lockscreen Watermark Checkbox
+        binding.cbLockscreen.setOnCheckedChangeListener { _, isChecked ->
+            saveBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, isChecked)
+            notifyServiceUpdate()
+        }
+
         // Start on Boot Checkbox
         binding.cbBoot.setOnCheckedChangeListener { _, isChecked ->
             saveBoolean("start_on_boot", isChecked)
         }
+
+        // Reset to Defaults Button
+        binding.btnResetDefaults.setOnClickListener {
+            resetToDefaults()
+        }
     }
 
-    private fun setPreset(title: String, subtitle: String) {
-        binding.etTitle.setText(title)
-        binding.etSubtitle.setText(subtitle)
+    private fun resetToDefaults() {
+        val defaultTitle = getString(R.string.default_title)
+        val defaultSubtitle = getString(R.string.default_subtitle)
+        val defaultOpacity = 70
+        val defaultMarginBottom = 48
+        val defaultMarginEnd = 24
+        val defaultLockscreen = true
+
+        binding.etTitle.setText(defaultTitle)
+        binding.etSubtitle.setText(defaultSubtitle)
+        binding.previewTitle.text = defaultTitle
+        binding.previewSubtitle.text = defaultSubtitle
+
+        binding.sliderOpacity.value = defaultOpacity.toFloat()
+        binding.tvOpacityLabel.text = "Opacity: $defaultOpacity%"
+        binding.previewContainer.alpha = (defaultOpacity / 100f).coerceIn(0.1f, 1f)
+
+        binding.sliderMarginBottom.value = defaultMarginBottom.toFloat()
+        binding.tvMarginBottomLabel.text = "Bottom Offset: ${defaultMarginBottom}dp"
+
+        binding.sliderMarginEnd.value = defaultMarginEnd.toFloat()
+        binding.tvMarginEndLabel.text = "Right Offset: ${defaultMarginEnd}dp"
+
+        binding.cbLockscreen.isChecked = defaultLockscreen
+
+        getSharedPreferences(OverlayService.PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(OverlayService.KEY_TITLE, defaultTitle)
+            .putString(OverlayService.KEY_SUBTITLE, defaultSubtitle)
+            .putInt(OverlayService.KEY_OPACITY, defaultOpacity)
+            .putInt(OverlayService.KEY_MARGIN_BOTTOM, defaultMarginBottom)
+            .putInt(OverlayService.KEY_MARGIN_END, defaultMarginEnd)
+            .putBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, defaultLockscreen)
+            .apply()
+
+        notifyServiceUpdate()
+        Toast.makeText(this, "Reset to default settings", Toast.LENGTH_SHORT).show()
     }
 
     private fun loadPreferences() {
@@ -145,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         val opacity = prefs.getInt(OverlayService.KEY_OPACITY, 70)
         val marginBottom = prefs.getInt(OverlayService.KEY_MARGIN_BOTTOM, 48)
         val marginEnd = prefs.getInt(OverlayService.KEY_MARGIN_END, 24)
+        val showOnLockscreen = prefs.getBoolean(OverlayService.KEY_SHOW_ON_LOCKSCREEN, true)
         val startOnBoot = prefs.getBoolean("start_on_boot", false)
 
         binding.etTitle.setText(title)
@@ -162,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         binding.sliderMarginEnd.value = marginEnd.toFloat()
         binding.tvMarginEndLabel.text = "Right Offset: ${marginEnd}dp"
 
+        binding.cbLockscreen.isChecked = showOnLockscreen
         binding.cbBoot.isChecked = startOnBoot
     }
 

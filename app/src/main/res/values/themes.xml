@@ -2,4 +2,12 @@
     <style name="Theme.ActivateAndroid" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/purple_40</item>
     </style>
+
+    <style name="Theme.TransparentLockscreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
