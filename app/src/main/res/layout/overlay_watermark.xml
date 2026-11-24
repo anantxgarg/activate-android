@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_watermark_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="end"
+    android:clickable="false"
+    android:focusable="false"
+    android:background="@android:color/transparent"
+    android:padding="8dp">
+
+    <!-- Title: Windows / Activate Linux style font & shadow -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:includeFontPadding="false"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="2.5"
+        android:text="@string/default_title"
+        android:textColor="@color/watermark_white"
+        android:textSize="18sp" />
+
+    <!-- Subtitle: Instructions line -->
+    <TextView
+        android:id="@+id/tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="sans-serif-light"
+        android:includeFontPadding="false"
+        android:shadowColor="#80000000"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="2.5"
+        android:text="@string/default_subtitle"
+        android:textColor="@color/watermark_white"
+        android:textSize="13sp" />
+
+</LinearLayout>

@@ -1,0 +1,5 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.ActivateAndroid" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/purple_40</item>
+    </style>
+</resources>

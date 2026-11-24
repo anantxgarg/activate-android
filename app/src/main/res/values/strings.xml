@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Activate Android</string>
+    <string name="tile_label">Activate Android</string>
+    <string name="default_title">Activate Android</string>
+    <string name="default_subtitle">Go to Settings to activate Android.</string>
+
+    <string name="enable_watermark">Enable Watermark</string>
+    <string name="permission_required_title">Overlay Permission Required</string>
+    <string name="permission_required_desc">Android requires the "Display over other apps" permission to render the watermark floating on top of other applications.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="permission_granted">Permission Granted</string>
+
+    <string name="customization_title">Watermark Text</string>
+    <string name="label_title_text">Title Text</string>
+    <string name="label_subtitle_text">Subtitle Text</string>
+    <string name="label_opacity">Opacity: %1$d%%</string>
+    <string name="label_font_size">Font Size: %1$dsp</string>
+    <string name="label_margin_bottom">Bottom Offset: %1$ddp</string>
+    <string name="label_margin_end">Right Offset: %1$ddp</string>
+    <string name="start_on_boot">Start on device boot</string>
+    <string name="reset_defaults">Reset to Defaults</string>
+</resources>
